@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "next typegen && tsc --noEmit",
-    "db:types": "supabase gen types typescript --project-id vtietcaydzqqxvwcriqk > src/types/database.ts"
+    "db:types": "supabase gen types typescript --project-id vtietcaydzqqxvwcriqk > src/types/database.ts",
+    "test": "node --conditions=react-server --no-warnings --test \"tests/unit/*.test.ts\""
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",

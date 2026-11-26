@@ -10,6 +10,7 @@ Migracions a `supabase/migrations/`, en ordre.
 | `20261126000300_contingut_social` | ✅ aplicada |
 | `20261126000400_contingut_personal` | ✅ aplicada |
 | `20261126000500_administracio` | ✅ aplicada |
+| `20261126000600_indexos_claus_foranes` | ✅ aplicada |
 
 ## Taules (Fase 2)
 

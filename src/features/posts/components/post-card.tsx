@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { Card, CardBody } from "@/components/ui/card";
 import { formatFullDate, formatPostDate } from "@/lib/dates";
-import { mediaUrl } from "@/lib/media";
 import { MemberAvatar, MemberLink } from "@/features/profiles/components/member-link";
 import type { PostView } from "../queries";
 import { PostFooter } from "./post-footer";
 import { DeletePostButton } from "./delete-post-button";
+import { PostPhotos } from "./post-photos";
 
 export type Viewer = { id: string; role: "admin" | "member" };
 
@@ -59,32 +59,5 @@ export function PostCard({ post, viewer }: { post: PostView; viewer: Viewer }) {
         </article>
       </CardBody>
     </Card>
-  );
-}
-
-function PostPhotos({ photos }: { photos: PostView["photos"] }) {
-  if (photos.length === 1) {
-    const src = mediaUrl("photos", photos[0].storage_path)!;
-    return (
-      <a href={src} target="_blank" rel="noopener" className="mt-2 block border border-linia bg-fons">
-        {/* eslint-disable-next-line @next/next/no-img-element -- imatge privada servida via /media */}
-        <img src={src} alt="" loading="lazy" className="mx-auto max-h-[480px] w-auto max-w-full" />
-      </a>
-    );
-  }
-  return (
-    <ul className={`mt-2 grid gap-1 ${photos.length === 2 ? "grid-cols-2" : "grid-cols-3"}`}>
-      {photos.map((p) => {
-        const src = mediaUrl("photos", p.storage_path)!;
-        return (
-          <li key={p.id}>
-            <a href={src} target="_blank" rel="noopener" className="block border border-linia">
-              {/* eslint-disable-next-line @next/next/no-img-element -- imatge privada servida via /media */}
-              <img src={src} alt="" loading="lazy" className="aspect-square w-full object-cover" />
-            </a>
-          </li>
-        );
-      })}
-    </ul>
   );
 }

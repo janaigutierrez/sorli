@@ -84,6 +84,15 @@ export default async function SettingsPage() {
           </div>
         </Section>
 
+        {me.role === "admin" ? (
+          <Section id="admin" title="Administració">
+            <p className="text-sm">
+              Ets administrador de Sorli. <Link href="/admin">⚙️ Obre el panell d&apos;administració</Link>{" "}
+              (invitacions, membres i moderació).
+            </p>
+          </Section>
+        ) : null}
+
         <Section id="sessio" title="Sessió">
           <form action={logout}>
             <Button type="submit" variant="secundari">
