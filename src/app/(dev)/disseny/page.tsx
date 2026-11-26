@@ -113,7 +113,7 @@ export default function DissenyPage() {
           <ProfileHeader profile={SAMPLE_PROFILE} isMe />
           <PostComposer viewerId={MARTA.id} wallOwnerId={JANAI.id} placeholder="Escriu alguna cosa a Janai…" />
           <PostCard post={SAMPLE_POST} viewer={{ id: JANAI.id, role: "admin" }} />
-          <PostCard post={{ ...SAMPLE_POST, id: "p2", author: JANAI, author_id: JANAI.id, body: "Primera publicació a Sorli! 🎉", likes: [], comments: [], created_at: new Date(Date.now() - 3 * 864e5).toISOString() }} viewer={{ id: JANAI.id, role: "admin" }} />
+          <PostCard post={{ ...SAMPLE_POST, id: "p2", author: JANAI, author_id: JANAI.id, body: "Primera publicació a Sorli! 🎉", likes: [], comments: [], created_at: "2026-11-23T00:30:00Z" }} viewer={{ id: JANAI.id, role: "admin" }} />
 
           {/* Compositor de publicació (mock antic) */}
           <Card>
