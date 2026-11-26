@@ -2,13 +2,10 @@
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import { fail, type ActionResult } from "@/lib/action-result";
 import { requireMember } from "@/lib/auth";
 import { isOwnStoragePath } from "@/lib/media";
 import { createClient } from "@/lib/supabase/server";
-
-export type ActionResult = { ok: true } | { ok: false; error: string };
-
-const fail = (error: string): ActionResult => ({ ok: false, error });
 
 const uuid = z.uuid();
 

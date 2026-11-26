@@ -276,6 +276,108 @@ export type Database = {
           { foreignKeyName: "profiles_invitation_id_fkey"; columns: ["invitation_id"]; isOneToOne: false; referencedRelation: "invitations"; referencedColumns: ["id"] },
         ];
       };
+      playlists: {
+        Row: {
+          cover_url: string | null;
+          created_at: string;
+          description: string | null;
+          id: string;
+          owner_id: string;
+          spotify_url: string;
+          title: string;
+          updated_at: string;
+        };
+        Insert: {
+          cover_url?: string | null;
+          created_at?: string;
+          description?: string | null;
+          id?: string;
+          owner_id: string;
+          spotify_url: string;
+          title: string;
+          updated_at?: string;
+        };
+        Update: {
+          cover_url?: string | null;
+          created_at?: string;
+          description?: string | null;
+          id?: string;
+          owner_id?: string;
+          spotify_url?: string;
+          title?: string;
+          updated_at?: string;
+        };
+        Relationships: [{ foreignKeyName: "playlists_owner_id_fkey"; columns: ["owner_id"]; isOneToOne: false; referencedRelation: "profiles"; referencedColumns: ["id"] }];
+      };
+      songs: {
+        Row: {
+          artist: string;
+          cover_path: string | null;
+          cover_url: string | null;
+          created_at: string;
+          id: string;
+          owner_id: string;
+          title: string;
+          updated_at: string;
+          url: string;
+        };
+        Insert: {
+          artist: string;
+          cover_path?: string | null;
+          cover_url?: string | null;
+          created_at?: string;
+          id?: string;
+          owner_id: string;
+          title: string;
+          updated_at?: string;
+          url: string;
+        };
+        Update: {
+          artist?: string;
+          cover_path?: string | null;
+          cover_url?: string | null;
+          created_at?: string;
+          id?: string;
+          owner_id?: string;
+          title?: string;
+          updated_at?: string;
+          url?: string;
+        };
+        Relationships: [{ foreignKeyName: "songs_owner_id_fkey"; columns: ["owner_id"]; isOneToOne: false; referencedRelation: "profiles"; referencedColumns: ["id"] }];
+      };
+      wishlist_items: {
+        Row: {
+          created_at: string;
+          description: string | null;
+          id: string;
+          image_path: string | null;
+          name: string;
+          owner_id: string;
+          updated_at: string;
+          url: string | null;
+        };
+        Insert: {
+          created_at?: string;
+          description?: string | null;
+          id?: string;
+          image_path?: string | null;
+          name: string;
+          owner_id: string;
+          updated_at?: string;
+          url?: string | null;
+        };
+        Update: {
+          created_at?: string;
+          description?: string | null;
+          id?: string;
+          image_path?: string | null;
+          name?: string;
+          owner_id?: string;
+          updated_at?: string;
+          url?: string | null;
+        };
+        Relationships: [{ foreignKeyName: "wishlist_items_owner_id_fkey"; columns: ["owner_id"]; isOneToOne: false; referencedRelation: "profiles"; referencedColumns: ["id"] }];
+      };
     };
     Views: { [_ in never]: never };
     Functions: {

@@ -8,6 +8,7 @@ Migracions a `supabase/migrations/`, en ordre.
 | `20261126000100_membres_i_invitacions` | ✅ aplicada |
 | `20261126000200_funcions_permisos_a_schema_privat` | ✅ aplicada |
 | `20261126000300_contingut_social` | ✅ aplicada |
+| `20261126000400_contingut_personal` | ✅ aplicada |
 
 ## Taules (Fase 2)
 
@@ -47,6 +48,17 @@ Migracions a `supabase/migrations/`, en ordre.
 | `comments` | id | `parent_id` per a respostes. Un sol nivell (trigger `check_comment_parent`) |
 | `likes` | (post_id, user_id) | La PK fa impossible fer dos m'agrada |
 | `notifications` | id | Les creen triggers: `wall_post`, `comment`, `reply`, `like`. No s'insereixen des del client |
+
+## Taules (Fase 4)
+
+| Taula | Notes |
+|---|---|
+| `wishlist_items` | Una llista per usuari (no hi ha taula `wishlists`). Nom, descripció, enllaç (http/https), foto opcional |
+| `songs` | Música actual: títol, artista, enllaç i portada (`cover_url` externa via oEmbed o `cover_path` pujada) |
+| `playlists` | Playlists de Spotify: títol i descripció propis, enllaç validat (`open.spotify.com/playlist/…`) i portada via oEmbed |
+
+Totes: lectura per a membres actius; crear, editar i esborrar només el propietari (l'admin també pot esborrar).
+Les fotos de la wishlist i les portades pujades van al bucket `photos` (sufix `-wish` / `-cover`), però **no** a la taula `photos`, així que no surten a la galeria.
 
 Storage: buckets **privats** `avatars` (5 MB) i `photos` (8 MB), només imatges. Ruta `<uid>/<uuid>.<ext>`. L'app les serveix via `/media/<bucket>/<ruta>`, que crea una URL signada amb la sessió de l'usuari.
 

@@ -64,6 +64,6 @@ docs/                  base de dades, permisos, desplegament
 - [x] Fase 1: configuració i sistema de disseny
 - [x] Fase 2: autenticació i registre per invitació
 - [x] Fase 3: feed, murs, publicacions, comentaris, m'agrada, perfils, cercador, notificacions, ajustos
-- [ ] Fase 4: galeria, wishlist, música, Spotify
+- [x] Fase 4: galeria, wishlist, música, Spotify
 - [ ] Fase 5: administració i revisió de seguretat
 - [ ] Fase 6: acabats, proves i desplegament

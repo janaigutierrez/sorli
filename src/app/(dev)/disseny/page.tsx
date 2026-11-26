@@ -12,6 +12,9 @@ import { PostComposer } from "@/features/posts/components/post-composer";
 import type { PostView } from "@/features/posts/queries";
 import { ProfileHeader } from "@/features/profiles/components/profile-header";
 import type { Profile } from "@/types/database";
+import { Music } from "@/features/personal/components/music";
+import { Wishlist } from "@/features/personal/components/wishlist";
+import type { Playlist, Song, WishItem } from "@/features/personal/queries";
 
 export const metadata: Metadata = { title: "Sistema de disseny" };
 
@@ -31,6 +34,20 @@ const SAMPLE_PROFILE: Profile = {
   created_at: "2026-11-26T00:18:00Z",
   updated_at: "2026-11-26T00:18:00Z",
 };
+
+const T = "2026-11-25T20:00:00Z";
+const SAMPLE_WISHES: WishItem[] = [
+  { id: "w1", owner_id: JANAI.id, name: "Bambes de córrer", description: "Talla 43, millor en blau", url: "https://example.com", image_path: null, created_at: T, updated_at: T },
+  { id: "w2", owner_id: JANAI.id, name: "Llibre: El nom del vent", description: null, url: null, image_path: null, created_at: T, updated_at: T },
+  { id: "w3", owner_id: JANAI.id, name: "Tassa de cafè gegant", description: "Per les nits de programar", url: "https://example.com", image_path: null, created_at: T, updated_at: T },
+];
+const SAMPLE_SONGS: Song[] = [
+  { id: "s1", owner_id: JANAI.id, title: "Cançó de l'estiu", artist: "Grup local", url: "https://open.spotify.com/track/x", cover_url: null, cover_path: null, created_at: T, updated_at: T },
+  { id: "s2", owner_id: JANAI.id, title: "Una altra cançó", artist: "Artista", url: "https://youtube.com/watch?v=x", cover_url: null, cover_path: null, created_at: T, updated_at: T },
+];
+const SAMPLE_PLAYLISTS: Playlist[] = [
+  { id: "pl1", owner_id: JANAI.id, title: "gotta go fast", description: "música per anar a córrer", spotify_url: "https://open.spotify.com/playlist/37i9dQZF1DX76Wlfdnj7AP", cover_url: null, created_at: T, updated_at: T },
+];
 
 const SAMPLE_POST: PostView = {
   id: "p1",
@@ -114,6 +131,9 @@ export default function DissenyPage() {
           <PostComposer viewerId={MARTA.id} wallOwnerId={JANAI.id} placeholder="Escriu alguna cosa a Janai…" />
           <PostCard post={SAMPLE_POST} viewer={{ id: JANAI.id, role: "admin" }} />
           <PostCard post={{ ...SAMPLE_POST, id: "p2", author: JANAI, author_id: JANAI.id, body: "Primera publicació a Sorli! 🎉", likes: [], comments: [], created_at: "2026-11-23T00:30:00Z" }} viewer={{ id: JANAI.id, role: "admin" }} />
+
+          <Wishlist items={SAMPLE_WISHES} isMe canModerate userId={JANAI.id} firstName="Janai" />
+          <Music songs={SAMPLE_SONGS} playlists={SAMPLE_PLAYLISTS} isMe canModerate userId={JANAI.id} firstName="Janai" />
 
           {/* Compositor de publicació (mock antic) */}
           <Card>

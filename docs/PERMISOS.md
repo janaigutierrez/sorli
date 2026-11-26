@@ -32,6 +32,7 @@ Totes les polítiques RLS es basen en aquestes dues funcions. Si algun dia cal m
 | `likes` | res | Llegir: membres. Crear/esborrar: només el propi |
 | `photos` / `post_photos` | res | Llegir: membres. Crear: només fotos pròpies (a la carpeta pròpia) i als posts propis. Esborrar: propietari o admin |
 | `notifications` | res | Només les pròpies: llegir, marcar com a llegides (`read_at`) i esborrar |
+| `wishlist_items`, `songs`, `playlists` | res | Llegir: membres. Crear/editar: propietari. Esborrar: propietari o admin |
 | Storage `avatars`, `photos` | res | Llegir: membres actius. Escriure: només a `<uid>/…`. Esborrar: propietari o admin |
 
 `username`, `role`, `status` i `invitation_id` **no es poden modificar des del client** (privilegis de columna). Els canvis de rol i suspensions es faran amb funcions d'admin a la Fase 5.
@@ -50,3 +51,7 @@ Totes les polítiques RLS es basen en aquestes dues funcions. Si algun dia cal m
 - Recuperació de contrasenya: mateixa resposta tant si el correu existeix com si no.
 - Límits d'intents: els de Supabase Auth (login, registre, correus) + tokens d'invitació de 256 bits.
 - Comptes suspesos: no poden entrar (es comprova al login i a cada pàgina) i les RLS els deixen sense accés.
+
+## Enllaços externs (oEmbed)
+
+El servidor només consulta l'oEmbed de **Spotify** i **YouTube** (llista tancada d'expressions regulars), mai una URL qualsevol, per evitar que es pugui fer servir per accedir a altres llocs (SSRF). Si l'oEmbed falla, simplement no hi ha portada automàtica.
