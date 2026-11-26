@@ -38,6 +38,7 @@ export default async function HomePage({ searchParams }: PageProps<"/inici">) {
           <SideLink href={`/perfil/${me.username}/wishes`}>Wishes</SideLink>
           <SideLink href={`/perfil/${me.username}/musica`}>Música</SideLink>
           <SideLink href="/notificacions">Notificacions</SideLink>
+          {me.role === "admin" ? <SideLink href="/admin">⚙️ Administració</SideLink> : null}
         </nav>
       }
       right={<MembersBox members={members} />}

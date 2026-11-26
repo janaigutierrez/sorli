@@ -65,5 +65,5 @@ docs/                  base de dades, permisos, desplegament
 - [x] Fase 2: autenticació i registre per invitació
 - [x] Fase 3: feed, murs, publicacions, comentaris, m'agrada, perfils, cercador, notificacions, ajustos
 - [x] Fase 4: galeria, wishlist, música, Spotify
-- [ ] Fase 5: administració i revisió de seguretat
+- [x] Fase 5: administració (invitacions, membres, moderació) i revisió de seguretat
 - [ ] Fase 6: acabats, proves i desplegament

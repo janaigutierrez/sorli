@@ -7,10 +7,30 @@ import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = { title: "Uneix-te" };
 
+const MESSAGES: Record<string, { tone: "info" | "error"; text: string }> = {
+  used: {
+    tone: "info",
+    text: "Aquesta invitació ja s'ha fet servir. Si et vas registrar tu amb aquest enllaç, ja pots entrar.",
+  },
+  expired: {
+    tone: "error",
+    text: "Aquesta invitació ha caducat. Demana'n una de nova a qui te l'ha enviat.",
+  },
+  revoked: {
+    tone: "error",
+    text: "Aquesta invitació s'ha anul·lat. Demana'n una de nova a qui te l'ha enviat.",
+  },
+  invalid: {
+    tone: "error",
+    text: "Aquest enllaç d'invitació no és vàlid. Comprova que l'hagis copiat sencer.",
+  },
+};
+
 export default async function RegisterPage({ params }: PageProps<"/registre/[token]">) {
   const { token } = await params;
   const supabase = await createClient();
   const { data: status } = await supabase.rpc("check_invitation", { p_token: token });
+  const message = MESSAGES[status ?? "invalid"] ?? MESSAGES.invalid;
 
   return (
     <div className="mx-auto max-w-[420px] space-y-3">
@@ -29,10 +49,7 @@ export default async function RegisterPage({ params }: PageProps<"/registre/[tok
         </Card>
       ) : (
         <>
-          <Notice tone="error">
-            Aquesta invitació no és vàlida, ja s&apos;ha fet servir o ha caducat. Demana&apos;n
-            una de nova a qui te l&apos;ha enviat.
-          </Notice>
+          <Notice tone={message.tone}>{message.text}</Notice>
           <Link href="/login" className="text-sm">
             Ja tens compte? Entra
           </Link>

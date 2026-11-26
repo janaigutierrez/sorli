@@ -9,6 +9,7 @@ Migracions a `supabase/migrations/`, en ordre.
 | `20261126000200_funcions_permisos_a_schema_privat` | ✅ aplicada |
 | `20261126000300_contingut_social` | ✅ aplicada |
 | `20261126000400_contingut_personal` | ✅ aplicada |
+| `20261126000500_administracio` | ⏳ pendent de confirmació a Supabase |
 
 ## Taules (Fase 2)
 
@@ -69,11 +70,19 @@ Storage: buckets **privats** `avatars` (5 MB) i `photos` (8 MB), només imatges.
 | `public.check_invitation(token, email?, username?)` | anon, authenticated | Validació prèvia: `ok`, `invalid`, `email_mismatch` o `username_taken` |
 | `public.create_post(wall_owner, body, photo_paths[])` | authenticated (SECURITY INVOKER) | Post + fotos en una transacció, amb RLS |
 | `public.delete_my_account()` | authenticated | Esborra el propi usuari (cascada) |
+| `public.admin_list_members()` | només admin (comprovat dins) | Membres amb correu, darrer accés i nº de publicacions |
+| `public.admin_set_member_status(user, status)` | només admin | Suspendre / reactivar. No a un mateix; sempre queda un admin actiu |
+| `public.admin_set_member_role(user, role)` | només admin | Fer / treure admin. No el propi rol |
+| `public.admin_delete_member(user)` | només admin | Elimina un compte (cascada). No a un mateix; sempre queda un admin actiu |
 | `private.is_active_member()` / `private.is_admin()` | authenticated (no exposades a l'API) | Base de les RLS |
 | `private.validate_invitation_on_signup()` / `private.create_profile_on_signup()` | ningú (triggers) | Registre per invitació |
 | `private.on_*_created()` / `private.notify()` | ningú (triggers) | Notificacions |
 
-## Crear una invitació a mà (fins al panell d'admin, Fase 5)
+## Crear invitacions
+
+Des del panell **/admin → Invitacions** (l'enllaç només es mostra un cop).
+
+### A mà (emergència, si no hi ha cap admin)
 
 ```bash
 # 1. genera un token i el seu hash

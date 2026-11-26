@@ -64,6 +64,9 @@ export async function login(_prev: FormState, formData: FormData): Promise<FormS
 // ─── Registre per invitació ────────────────────────────────────
 const INVITATION_ERRORS: Record<string, string> = {
   invalid: "Aquesta invitació no és vàlida, ja s'ha fet servir o ha caducat.",
+  used: "Aquesta invitació ja s'ha fet servir. Si és teva, entra amb el teu correu.",
+  expired: "Aquesta invitació ha caducat. Demana'n una de nova.",
+  revoked: "Aquesta invitació s'ha anul·lat. Demana'n una de nova.",
   email_mismatch: "Aquesta invitació és per a una altra adreça de correu.",
 };
 

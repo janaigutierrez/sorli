@@ -55,3 +55,31 @@ Totes les polítiques RLS es basen en aquestes dues funcions. Si algun dia cal m
 ## Enllaços externs (oEmbed)
 
 El servidor només consulta l'oEmbed de **Spotify** i **YouTube** (llista tancada d'expressions regulars), mai una URL qualsevol, per evitar que es pugui fer servir per accedir a altres llocs (SSRF). Si l'oEmbed falla, simplement no hi ha portada automàtica.
+
+## Administració (Fase 5)
+
+Panell `/admin` (Invitacions · Membres · Moderació). Tres capes:
+1. `requireAdmin()` a cada pàgina i acció: un no-admin rep un 404.
+2. Les funcions `admin_*` comproven `is_admin()` **dins de Postgres** (no es poden cridar saltant-se l'app).
+3. Salvaguardes: ningú es pot suspendre, degradar ni eliminar a si mateix, i sempre queda almenys un admin actiu.
+
+Moderació: l'admin pot eliminar qualsevol publicació, comentari, foto, desig, cançó o playlist (polítiques RLS de `delete`).
+Un compte suspès no pot entrar (es comprova al login i a cada pàgina) i les RLS el deixen sense accés a res; el seu contingut es manté visible per als altres.
+
+## Capçaleres HTTP (next.config.ts)
+
+| Capçalera | Per a què |
+|---|---|
+| `Content-Security-Policy` | Limita d'on es carreguen scripts, imatges, iframes (només Spotify) i connexions (només Sorli i Supabase) |
+| `X-Frame-Options: DENY` + `frame-ancestors 'none'` | Ningú pot incrustar Sorli (anti-clickjacking) |
+| `Strict-Transport-Security` | Força HTTPS |
+| `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy` | Endureixen el navegador |
+| `X-Robots-Tag: noindex` | Xarxa privada: fora dels cercadors |
+
+Cookies de sessió: `SameSite=Lax`, `Secure` en producció. No són `HttpOnly` perquè el client del navegador les necessita per pujar imatges a Storage; les RLS continuen sent la barrera.
+
+## Pendents de configurar al panell de Supabase (no es poden fer per codi)
+
+- **SMTP propi** (p. ex. Gmail amb contrasenya d'aplicació) perquè els correus arribin a tots els membres.
+- **Site URL / Redirect URLs** → `https://sorli.netlify.app`.
+- **Leaked password protection** (si el pla ho permet).

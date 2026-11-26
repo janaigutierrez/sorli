@@ -381,6 +381,30 @@ export type Database = {
     };
     Views: { [_ in never]: never };
     Functions: {
+      admin_delete_member: { Args: { p_user: string }; Returns: undefined };
+      admin_list_members: {
+        Args: never;
+        Returns: {
+          avatar_path: string | null;
+          created_at: string;
+          display_name: string;
+          email: string;
+          id: string;
+          last_sign_in_at: string | null;
+          post_count: number;
+          role: Database["public"]["Enums"]["member_role"];
+          status: Database["public"]["Enums"]["member_status"];
+          username: string;
+        }[];
+      };
+      admin_set_member_role: {
+        Args: { p_role: Database["public"]["Enums"]["member_role"]; p_user: string };
+        Returns: undefined;
+      };
+      admin_set_member_status: {
+        Args: { p_status: Database["public"]["Enums"]["member_status"]; p_user: string };
+        Returns: undefined;
+      };
       check_invitation: {
         Args: { p_email?: string; p_token: string; p_username?: string };
         Returns: string;

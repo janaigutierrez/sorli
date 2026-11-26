@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { publicEnv } from "@/lib/env";
+import { cookieOptions } from "./cookie-options";
 
 /** Rutes accessibles sense sessió. Tota la resta requereix estar autenticat. */
 const PUBLIC_PREFIXES = ["/login", "/registre", "/recuperar", "/auth"];
@@ -25,6 +26,7 @@ export async function updateSession(request: NextRequest) {
     publicEnv.NEXT_PUBLIC_SUPABASE_URL,
     publicEnv.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
     {
+      cookieOptions,
       cookies: {
         getAll() {
           return request.cookies.getAll();
