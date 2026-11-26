@@ -9,7 +9,7 @@ Migracions a `supabase/migrations/`, en ordre.
 | `20261126000200_funcions_permisos_a_schema_privat` | ✅ aplicada |
 | `20261126000300_contingut_social` | ✅ aplicada |
 | `20261126000400_contingut_personal` | ✅ aplicada |
-| `20261126000500_administracio` | ⏳ pendent de confirmació a Supabase |
+| `20261126000500_administracio` | ✅ aplicada |
 
 ## Taules (Fase 2)
 
