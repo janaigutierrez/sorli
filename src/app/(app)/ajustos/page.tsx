@@ -68,7 +68,7 @@ export default async function SettingsPage() {
         <Section id="notificacions" title="Notificacions">
           <p className="text-sm">
             Les notificacions de Sorli es mostren dins l&apos;app (🔔 a la capçalera): quan algú escriu
-            al teu mur, comenta o respon, o li agrada una publicació teva. No t&apos;enviem correus.
+            al teu mur, comenta o respon, o li agrada una publicació teva. Es marquen com a llegides quan les obres. No t&apos;enviem correus.
           </p>
           <div className="mt-2 flex items-center gap-3">
             <Link href="/notificacions" className="text-sm">

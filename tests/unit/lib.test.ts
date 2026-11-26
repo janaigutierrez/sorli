@@ -68,3 +68,23 @@ describe("enllaços de música", () => {
     assert.equal(spotifyPlaylistId("https://evil.com/playlist/x"), null);
   });
 });
+
+describe("artista de Spotify", async () => {
+  const { parseSpotifyArtist } = await import("../../src/lib/oembed.ts");
+  test("llegeix music:musician_description", () => {
+    const html = `<head><meta property="og:title" content="Never Gonna Give You Up"/>
+      <meta name="music:musician_description" content="Rick Astley"/>
+      <meta property="og:description" content="Rick Astley · Whenever You Need Somebody · Song · 1987"/></head>`;
+    assert.equal(parseSpotifyArtist(html), "Rick Astley");
+  });
+  test("diversos artistes i entitats HTML", () => {
+    const html = `<meta name="music:musician_description" content="Rosal&#xED;a"><meta name="music:musician_description" content="The Weeknd &amp; Co">`;
+    assert.equal(parseSpotifyArtist(html), "Rosalía, The Weeknd & Co");
+  });
+  test("pla B: og:description", () => {
+    assert.equal(parseSpotifyArtist(`<meta property="og:description" content="Txarango · Som Riu · Song · 2016">`), "Txarango");
+  });
+  test("sense dades → null", () => {
+    assert.equal(parseSpotifyArtist("<html></html>"), null);
+  });
+});

@@ -52,15 +52,71 @@ export async function fetchLinkPreview(rawUrl: string): Promise<LinkPreview | nu
     const data = (await res.json()) as Record<string, unknown>;
     const str = (v: unknown) => (typeof v === "string" && v.trim() ? v.trim() : null);
     const thumb = str(data.thumbnail_url);
+    // L'oEmbed de Spotify no inclou l'artista: per a cançons, el llegim de la pàgina.
+    const author =
+      str(data.author_name) ?? (provider.name === "spotify" ? await fetchSpotifyArtist(url) : null);
     return {
       provider: provider.name,
       title: str(data.title),
-      author: str(data.author_name),
+      author,
       thumbnail: thumb && /^https:\/\//.test(thumb) ? thumb : null,
     };
   } catch {
     return null;
   }
+}
+
+const SPOTIFY_TRACK = /^https:\/\/open\.spotify\.com\/(intl-[a-z]{2}\/)?track\/[A-Za-z0-9]+$/;
+
+/**
+ * Artista d'una cançó de Spotify, llegit de les etiquetes <meta> de la seva
+ * pàgina pública (`music:musician_description`, una per artista).
+ * Només es consulta open.spotify.com/track/… (mai una URL arbitrària).
+ */
+export async function fetchSpotifyArtist(trackUrl: string): Promise<string | null> {
+  if (!SPOTIFY_TRACK.test(trackUrl)) return null;
+  try {
+    const res = await fetch(trackUrl, {
+      signal: AbortSignal.timeout(5000),
+      headers: { "User-Agent": "Mozilla/5.0 (compatible; Sorli/1.0)", "Accept-Language": "ca,es;q=0.8,en;q=0.5" },
+      next: { revalidate: 86_400 },
+    });
+    if (!res.ok) return null;
+    return parseSpotifyArtist(await res.text());
+  } catch {
+    return null;
+  }
+}
+
+/** Extreu l'artista (o artistes) de l'HTML d'una pàgina de cançó de Spotify. */
+export function parseSpotifyArtist(html: string): string | null {
+  const metas = [...html.matchAll(/<meta\s[^>]*>/gi)].map((m) => {
+    const tag = m[0];
+    const key = tag.match(/\b(?:name|property)=["']([^"']+)["']/i)?.[1]?.toLowerCase();
+    const content = tag.match(/\bcontent=["']([^"']*)["']/i)?.[1];
+    return { key, content: content ? decodeEntities(content).trim() : "" };
+  });
+
+  const artists = metas
+    .filter((m) => m.key === "music:musician_description" && m.content)
+    .map((m) => m.content);
+  if (artists.length) return [...new Set(artists)].join(", ").slice(0, 150);
+
+  // Pla B: og:description = "Artista · Àlbum · Song · Any"
+  const og = metas.find((m) => m.key === "og:description")?.content;
+  const first = og?.split(" · ")[0]?.trim();
+  return first ? first.slice(0, 150) : null;
+}
+
+function decodeEntities(s: string) {
+  return s
+    .replace(/&amp;/g, "&")
+    .replace(/&quot;/g, '"')
+    .replace(/&#x27;|&#39;|&apos;/g, "'")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n)))
+    .replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCodePoint(parseInt(h, 16)));
 }
 
 /** ID d'una playlist de Spotify a partir de l'enllaç (per a l'embed oficial). */

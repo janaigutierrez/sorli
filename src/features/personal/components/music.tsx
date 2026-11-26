@@ -146,9 +146,9 @@ function SongForm({ userId, onDone }: { userId: string; onDone: () => void }) {
     const res = await previewMusicLink(url);
     setLooking(false);
     if (res.ok && res.data) {
-      // Spotify només dona el títol; YouTube, títol i canal.
+      // Spotify: títol + artista (llegit de la pàgina). YouTube: títol + canal.
       if (!title && res.data.title) setTitle(res.data.title);
-      if (!artist && res.data.author && res.data.provider === "youtube") setArtist(res.data.author);
+      if (!artist && res.data.author) setArtist(res.data.author);
       setAutoCover(res.data.thumbnail);
     }
   }
