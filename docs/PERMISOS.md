@@ -21,6 +21,8 @@ Totes les polítiques RLS es basen en aquestes dues funcions. Si algun dia cal m
    - **trigger AFTER**: crea el `profile` amb el rol de la invitació i la marca com a usada.
 5. Si alguna cosa falla, Postgres desfà l'alta sencera: **no pot existir cap compte sense invitació**, encara que algú cridi l'API d'Auth directament amb la clau pública.
 
+> ⚠️ Per això, a Supabase **"Allow new users to sign up" ha d'estar activat**: l'interruptor no protegeix res aquí (ho fa el trigger) i, si està desactivat, bloqueja també els registres amb invitació.
+
 ## Privilegis per taula
 
 | Taula | anon | authenticated |

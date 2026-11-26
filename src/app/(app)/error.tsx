@@ -16,10 +16,18 @@ export default function AppError({ error, reset }: { error: Error & { digest?: s
       <Card>
         <CardHeader title="Vaja, alguna cosa ha fallat" />
         <CardBody className="space-y-3">
-          <p>No s&apos;ha pogut carregar aquesta pàgina. Torna-ho a provar d&apos;aquí a un moment.</p>
+          <p>
+            No s&apos;ha pogut completar l&apos;acció. Si Sorli s&apos;acaba d&apos;actualitzar, només cal{" "}
+            <b>recarregar la pàgina</b>.
+          </p>
           {error.digest ? <p className="text-xs text-tinta-suau">Codi de l&apos;error: {error.digest}</p> : null}
           <div className="flex gap-2">
-            <Button onClick={reset}>Torna-ho a provar</Button>
+            {/* Recàrrega completa: si la pàgina és d'una versió anterior de Sorli,
+                reset() no n'hi ha prou (les accions del servidor han canviat). */}
+            <Button onClick={() => window.location.reload()}>Recarrega la pàgina</Button>
+            <Button variant="secundari" onClick={reset}>
+              Torna-ho a provar
+            </Button>
             <Link
               href="/inici"
               className="inline-flex h-[26px] items-center border border-linia bg-[#f4f6f6] px-3 text-sm font-bold text-tinta no-underline hover:no-underline"

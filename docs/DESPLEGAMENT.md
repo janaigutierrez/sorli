@@ -26,6 +26,8 @@ No cal cap clau secreta.
 
 ## Configuració de Supabase (panell; no es pot fer per codi)
 
+0. ⚠️ **Authentication → Sign In / Providers → "Allow new users to sign up" ha d'estar ACTIVAT.**
+   Sembla contradictori en una xarxa privada, però qui impedeix registres sense invitació és el **trigger de Postgres** (vegeu PERMISOS.md), no aquest interruptor. Si el desactives, **ningú es pot registrar, ni amb invitació** (error `signup_disabled`).
 1. **Authentication → URL Configuration**
    - Site URL: `https://sorli.netlify.app`
    - Redirect URLs: `https://sorli.netlify.app/**` i `http://localhost:3000/**`
@@ -61,4 +63,6 @@ Proves de seguretat de la base de dades: enganxa [`supabase/tests/rls.sql`](../s
 | Error a una pàgina | Netlify → Logs → Functions |
 | No arriben correus | Supabase → Authentication → Logs, i la carpeta de correu brossa |
 | "Invitació no vàlida" | `/admin` → Invitacions: mira'n l'estat (usada, caducada, revocada) |
+| "El registre està desactivat" | Activa "Allow new users to sign up" (punt 0 de la configuració de Supabase) |
+| Error en clicar un botó just després d'un desplegament | La pàgina era de la versió anterior: recarrega-la |
 | Supabase diu "paused" | El pla gratuït pausa el projecte després d'una setmana sense ús: Supabase → **Restore project** |

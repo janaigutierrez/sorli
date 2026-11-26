@@ -116,8 +116,25 @@ export async function register(_prev: FormState, formData: FormData): Promise<Fo
     if (error.code === "weak_password") {
       return { fieldErrors: { password: ["La contrasenya és massa feble."] }, values };
     }
-    // El trigger ha rebutjat l'alta (normalment, invitació consumida entremig).
-    return { error: INVITATION_ERRORS.invalid, values };
+    if (error.code === "signup_disabled") {
+      // Configuració de Supabase: "Allow new users to sign up" ha d'estar ACTIVAT
+      // (qui decideix si es pot entrar és el trigger d'invitacions, no aquest interruptor).
+      console.error("[registre] Supabase té els registres desactivats (signup_disabled)");
+      return {
+        error: "Ara mateix el registre està desactivat a Sorli. Avisa l'administrador (no és culpa de la teva invitació).",
+        values,
+      };
+    }
+    console.error("[registre] signUp ha fallat:", error.status, error.code, error.message);
+    // Si la invitació s'ha consumit entremig, el trigger rebutja l'alta: ho tornem a comprovar.
+    const { data: recheck } = await supabase.rpc("check_invitation", { p_token: token });
+    if (recheck && recheck !== "ok") {
+      return { error: INVITATION_ERRORS[recheck] ?? INVITATION_ERRORS.invalid, values };
+    }
+    return {
+      error: `No s'ha pogut crear el compte. Torna-ho a provar d'aquí a un moment (codi: ${error.code ?? error.status ?? "desconegut"}).`,
+      values,
+    };
   }
 
   // Amb la confirmació de correu activa, Supabase "simula" èxit si el correu
