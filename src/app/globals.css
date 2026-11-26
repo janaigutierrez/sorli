@@ -1,26 +1,91 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/*
+ * ─── Sistema de disseny de Sorli ─────────────────────────────
+ * Estètica de xarxa social clàssica (2009-2012) amb identitat pròpia:
+ * turquesa + blau escuma de mar + verd escuma de mar.
+ * Res de glassmorphism, ombres exagerades ni animacions gratuïtes.
+ */
+@theme {
+  /* Turquesa (color principal) */
+  --color-sorli-50: #edfaf8;
+  --color-sorli-100: #d2f2ed;
+  --color-sorli-200: #a6e4db;
+  --color-sorli-300: #6fd0c4;
+  --color-sorli-400: #3db6a9;
+  --color-sorli-500: #229b8f;
+  --color-sorli-600: #1a7d74;
+  --color-sorli-700: #18645e;
+  --color-sorli-800: #17504c;
+  --color-sorli-900: #154340;
+
+  /* Blau escuma de mar */
+  --color-mar-100: #dcf0f4;
+  --color-mar-300: #8ccbd8;
+  --color-mar-500: #3f9db1;
+  --color-mar-600: #317f91;
+  --color-mar-700: #2a6676;
+
+  /* Verd escuma de mar */
+  --color-escuma-100: #dff5ea;
+  --color-escuma-300: #93dbb6;
+  --color-escuma-500: #46b583;
+  --color-escuma-600: #34946a;
+
+  /* Neutres (gris lleugerament verdós per no trencar la gamma) */
+  --color-paper: #ffffff;
+  --color-fons: #eef2f1; /* fons de pàgina, gris molt clar */
+  --color-linia: #cfd9d7; /* vores fines */
+  --color-linia-suau: #e3e9e8; /* separadors */
+  --color-tinta: #1d2a29; /* text principal */
+  --color-tinta-suau: #627170; /* gris mitjà: dates, metadades */
+
+  --color-perill: #b23b3b;
+  --color-perill-fons: #fbeaea;
+
+  /* Tipografia clàssica de xarxa social */
+  --font-sans: "Lucida Grande", "Segoe UI", Tahoma, Verdana, Arial, sans-serif;
+
+  /* Mida base més petita i densa, com les xarxes clàssiques */
+  --text-xs: 0.6875rem; /* 11px */
+  --text-sm: 0.75rem; /* 12px */
+  --text-base: 0.8125rem; /* 13px */
+  --text-lg: 0.9375rem; /* 15px */
+  --text-xl: 1.125rem; /* 18px */
+
+  --radius-sm: 2px;
+  --radius: 3px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  html {
+    background: var(--color-fons);
+    color: var(--color-tinta);
+  }
+  body {
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    line-height: 1.38;
+    min-height: 100dvh;
+  }
+  a {
+    color: var(--color-sorli-700);
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-mar-500);
+    outline-offset: 1px;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Degradat subtil de la capçalera */
+@utility bg-capcalera {
+  background: linear-gradient(
+    180deg,
+    var(--color-sorli-500) 0%,
+    var(--color-sorli-600) 55%,
+    var(--color-mar-600) 100%
+  );
 }
