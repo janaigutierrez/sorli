@@ -21,12 +21,18 @@ Totes les polítiques RLS es basen en aquestes dues funcions. Si algun dia cal m
    - **trigger AFTER**: crea el `profile` amb el rol de la invitació i la marca com a usada.
 5. Si alguna cosa falla, Postgres desfà l'alta sencera: **no pot existir cap compte sense invitació**, encara que algú cridi l'API d'Auth directament amb la clau pública.
 
-## Privilegis per taula (Fase 2)
+## Privilegis per taula
 
 | Taula | anon | authenticated |
 |---|---|---|
 | `profiles` | res | `SELECT` (si és membre actiu) · `UPDATE` només de `display_name, bio, city, birthday, avatar_path, cover_path` del propi perfil |
 | `invitations` | res | `SELECT/INSERT/UPDATE` només si és admin |
+| `posts` | res | Llegir: membres. Crear: en nom propi, a murs de membres actius. Editar (`body`): autor. Esborrar: autor, propietari del mur o admin |
+| `comments` | res | Llegir: membres. Crear: en nom propi. Esborrar: autor, propietari del mur o admin |
+| `likes` | res | Llegir: membres. Crear/esborrar: només el propi |
+| `photos` / `post_photos` | res | Llegir: membres. Crear: només fotos pròpies (a la carpeta pròpia) i als posts propis. Esborrar: propietari o admin |
+| `notifications` | res | Només les pròpies: llegir, marcar com a llegides (`read_at`) i esborrar |
+| Storage `avatars`, `photos` | res | Llegir: membres actius. Escriure: només a `<uid>/…`. Esborrar: propietari o admin |
 
 `username`, `role`, `status` i `invitation_id` **no es poden modificar des del client** (privilegis de columna). Els canvis de rol i suspensions es faran amb funcions d'admin a la Fase 5.
 

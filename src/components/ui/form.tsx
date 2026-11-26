@@ -1,9 +1,4 @@
-import type {
-  InputHTMLAttributes,
-  LabelHTMLAttributes,
-  ReactNode,
-  TextareaHTMLAttributes,
-} from "react";
+import type { ComponentProps, LabelHTMLAttributes, ReactNode } from "react";
 import { cn } from "@/lib/cn";
 
 const field =
@@ -11,14 +6,11 @@ const field =
   "placeholder:text-tinta-suau focus:border-mar-500 focus:outline-none " +
   "aria-[invalid=true]:border-perill";
 
-export function Input({ className, ...props }: InputHTMLAttributes<HTMLInputElement>) {
+export function Input({ className, ...props }: ComponentProps<"input">) {
   return <input className={cn(field, "h-[26px]", className)} {...props} />;
 }
 
-export function Textarea({
-  className,
-  ...props
-}: TextareaHTMLAttributes<HTMLTextAreaElement>) {
+export function Textarea({ className, ...props }: ComponentProps<"textarea">) {
   return <textarea className={cn(field, "min-h-16 resize-y", className)} {...props} />;
 }
 
@@ -47,7 +39,7 @@ export function Field({
   errors,
   className,
   ...props
-}: InputHTMLAttributes<HTMLInputElement> & {
+}: ComponentProps<"input"> & {
   label: string;
   name: string;
   errors?: string[];

@@ -7,8 +7,49 @@ import { Button } from "@/components/ui/button";
 import { Card, CardBody, CardHeader, Separator } from "@/components/ui/card";
 import { FieldError, Input, Label, Notice, Textarea } from "@/components/ui/form";
 import { Tabs } from "@/components/ui/tabs";
+import { PostCard } from "@/features/posts/components/post-card";
+import { PostComposer } from "@/features/posts/components/post-composer";
+import type { PostView } from "@/features/posts/queries";
+import { ProfileHeader } from "@/features/profiles/components/profile-header";
+import type { Profile } from "@/types/database";
 
 export const metadata: Metadata = { title: "Sistema de disseny" };
+
+const JANAI = { id: "00000000-0000-4000-8000-000000000001", username: "janaiot", display_name: "Janai G", avatar_path: null };
+const MARTA = { id: "00000000-0000-4000-8000-000000000002", username: "marta", display_name: "Marta P", avatar_path: null };
+const POL = { id: "00000000-0000-4000-8000-000000000003", username: "pol", display_name: "Pol R", avatar_path: null };
+
+const SAMPLE_PROFILE: Profile = {
+  ...JANAI,
+  bio: "Fent Sorli a les tantes de la nit 🌊",
+  city: "Caldes de Montbui",
+  birthday: "1997-03-12",
+  cover_path: null,
+  role: "admin",
+  status: "active",
+  invitation_id: null,
+  created_at: "2026-11-26T00:18:00Z",
+  updated_at: "2026-11-26T00:18:00Z",
+};
+
+const SAMPLE_POST: PostView = {
+  id: "p1",
+  body: "Per molts anys!! Ja he vist la teva wishlist 👀\nAvui sopar a les 9.",
+  created_at: new Date(Date.now() - 2 * 3600e3).toISOString(),
+  author_id: MARTA.id,
+  wall_owner_id: JANAI.id,
+  author: MARTA,
+  wall_owner: JANAI,
+  photos: [],
+  likes: [
+    { user_id: POL.id, username: POL.username, display_name: POL.display_name },
+    { user_id: JANAI.id, username: JANAI.username, display_name: JANAI.display_name },
+  ],
+  comments: [
+    { id: "c1", body: "Jo ja tinc el regal 🎁", created_at: new Date(Date.now() - 3600e3).toISOString(), parent_id: null, author_id: POL.id, author: POL },
+    { id: "c2", body: "Gràcies!! 🥹", created_at: new Date(Date.now() - 1800e3).toISOString(), parent_id: "c1", author_id: JANAI.id, author: JANAI },
+  ],
+};
 
 const swatches = [
   ["sorli-50", "bg-sorli-50"],
@@ -68,7 +109,13 @@ export default function DissenyPage() {
             </CardBody>
           </Card>
 
-          {/* Compositor de publicació */}
+          {/* Components REALS de la Fase 3 amb dades d'exemple */}
+          <ProfileHeader profile={SAMPLE_PROFILE} isMe />
+          <PostComposer viewerId={MARTA.id} wallOwnerId={JANAI.id} placeholder="Escriu alguna cosa a Janai…" />
+          <PostCard post={SAMPLE_POST} viewer={{ id: JANAI.id, role: "admin" }} />
+          <PostCard post={{ ...SAMPLE_POST, id: "p2", author: JANAI, author_id: JANAI.id, body: "Primera publicació a Sorli! 🎉", likes: [], comments: [], created_at: new Date(Date.now() - 3 * 864e5).toISOString() }} viewer={{ id: JANAI.id, role: "admin" }} />
+
+          {/* Compositor de publicació (mock antic) */}
           <Card>
             <CardBody className="space-y-2">
               <Textarea placeholder="Què hi ha de nou?" />

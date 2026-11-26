@@ -6,7 +6,8 @@ Migracions a `supabase/migrations/`, en ordre.
 | Migració | Estat |
 |---|---|
 | `20261126000100_membres_i_invitacions` | ✅ aplicada |
-| `20261126000200_funcions_permisos_a_schema_privat` | ⏳ pendent (cal confirmar-la, conté `drop policy`) |
+| `20261126000200_funcions_permisos_a_schema_privat` | ✅ aplicada |
+| `20261126000300_contingut_social` | ✅ aplicada |
 
 ## Taules (Fase 2)
 
@@ -36,13 +37,29 @@ Migracions a `supabase/migrations/`, en ordre.
 | status | `active` \| `suspended` | |
 | invitation_id | uuid → invitations | |
 
+## Taules (Fase 3)
+
+| Taula | Clau | Notes |
+|---|---|---|
+| `posts` | id | `author_id` (qui escriu) · `wall_owner_id` (de qui és el mur). Iguals = publicació pròpia |
+| `photos` | id | Galeria global: `owner_id` = qui la puja. `storage_path` ha de començar per `<owner_id>/` |
+| `post_photos` | (post_id, photo_id) | Referències: el fitxer no es duplica. Esborrar un post NO esborra les fotos de la galeria |
+| `comments` | id | `parent_id` per a respostes. Un sol nivell (trigger `check_comment_parent`) |
+| `likes` | (post_id, user_id) | La PK fa impossible fer dos m'agrada |
+| `notifications` | id | Les creen triggers: `wall_post`, `comment`, `reply`, `like`. No s'insereixen des del client |
+
+Storage: buckets **privats** `avatars` (5 MB) i `photos` (8 MB), només imatges. Ruta `<uid>/<uuid>.<ext>`. L'app les serveix via `/media/<bucket>/<ruta>`, que crea una URL signada amb la sessió de l'usuari.
+
 ## Funcions
 
 | Funció | Qui la pot cridar | Per a què |
 |---|---|---|
-| `check_invitation(token, email?, username?)` | anon, authenticated | Validació prèvia: `ok`, `invalid`, `email_mismatch` o `username_taken` |
-| `is_active_member()` / `is_admin()` | authenticated | Base de les RLS |
-| `validate_invitation_on_signup()` / `create_profile_on_signup()` | ningú (triggers) | Registre per invitació |
+| `public.check_invitation(token, email?, username?)` | anon, authenticated | Validació prèvia: `ok`, `invalid`, `email_mismatch` o `username_taken` |
+| `public.create_post(wall_owner, body, photo_paths[])` | authenticated (SECURITY INVOKER) | Post + fotos en una transacció, amb RLS |
+| `public.delete_my_account()` | authenticated | Esborra el propi usuari (cascada) |
+| `private.is_active_member()` / `private.is_admin()` | authenticated (no exposades a l'API) | Base de les RLS |
+| `private.validate_invitation_on_signup()` / `private.create_profile_on_signup()` | ningú (triggers) | Registre per invitació |
+| `private.on_*_created()` / `private.notify()` | ningú (triggers) | Notificacions |
 
 ## Crear una invitació a mà (fins al panell d'admin, Fase 5)
 

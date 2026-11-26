@@ -9,6 +9,7 @@ const MESSAGES: Record<string, { tone: "error" | "info" | "ok"; text: string }> 
   suspes: { tone: "error", text: "Aquest compte està suspès. Parla amb l'administrador." },
   enllac: { tone: "error", text: "L'enllaç no és vàlid o ha caducat. Torna-ho a provar." },
   sortit: { tone: "info", text: "Has tancat la sessió. Fins aviat!" },
+  eliminat: { tone: "info", text: "El teu compte s'ha eliminat. Gràcies per haver format part de Sorli." },
 };
 
 export default async function LoginPage({ searchParams }: PageProps<"/login">) {

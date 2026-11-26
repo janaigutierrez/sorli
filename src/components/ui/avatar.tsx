@@ -4,7 +4,7 @@ const sizes = {
   xs: "size-8 text-xs", // comentaris
   sm: "size-10 text-sm", // publicacions
   md: "size-[50px] text-base", // llistes, cercador
-  lg: "size-[160px] text-4xl", // perfil
+  lg: "size-[120px] text-3xl sm:size-[160px] sm:text-4xl", // perfil
 } as const;
 
 /**

@@ -39,7 +39,8 @@ Les variables es validen amb zod a `src/lib/env.ts` i `src/lib/env.server.ts`. S
 src/
   app/
     (auth)/            login, registre, recuperació (sense sessió)
-    (app)/             zona de membres (amb sessió)       ← Fase 3
+    (app)/             zona de membres (amb sessió): inici, perfil, cercador, ajustos, notificacions
+    media/             serveix imatges privades de Storage
     (dev)/disseny      guia d'estil (només dev)
   components/ui/       Button, Card, Avatar, Tabs, Input…
   components/layout/   Header, NavLinks, PageShell (3 columnes)
@@ -62,7 +63,7 @@ docs/                  base de dades, permisos, desplegament
 
 - [x] Fase 1: configuració i sistema de disseny
 - [x] Fase 2: autenticació i registre per invitació
-- [ ] Fase 3: feed, murs, publicacions, comentaris, m'agrada
+- [x] Fase 3: feed, murs, publicacions, comentaris, m'agrada, perfils, cercador, notificacions, ajustos
 - [ ] Fase 4: galeria, wishlist, música, Spotify
 - [ ] Fase 5: administració i revisió de seguretat
 - [ ] Fase 6: acabats, proves i desplegament
