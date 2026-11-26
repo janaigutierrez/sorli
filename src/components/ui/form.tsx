@@ -40,6 +40,36 @@ export function FieldError({ id, children }: { id?: string; children?: ReactNode
   );
 }
 
+/** Label + input + error, amb l'accessibilitat lligada (aria-invalid/aria-describedby). */
+export function Field({
+  label,
+  name,
+  errors,
+  className,
+  ...props
+}: InputHTMLAttributes<HTMLInputElement> & {
+  label: string;
+  name: string;
+  errors?: string[];
+}) {
+  const id = props.id ?? name;
+  const errorId = `${id}-error`;
+  const hasError = Boolean(errors?.length);
+  return (
+    <div className={className}>
+      <Label htmlFor={id}>{label}</Label>
+      <Input
+        id={id}
+        name={name}
+        aria-invalid={hasError || undefined}
+        aria-describedby={hasError ? errorId : undefined}
+        {...props}
+      />
+      <FieldError id={errorId}>{errors?.[0]}</FieldError>
+    </div>
+  );
+}
+
 /** Missatge de bloc (error general d'un formulari o confirmació). */
 export function Notice({
   tone = "info",

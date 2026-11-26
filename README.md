@@ -29,7 +29,6 @@ npm run dev
 |---|---|---|
 | `NEXT_PUBLIC_SUPABASE_URL` | navegador + servidor | URL del projecte Supabase |
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | navegador + servidor | Clau publicable (`sb_publishable_…`). Segura al navegador: tot passa per RLS |
-| `SUPABASE_SECRET_KEY` | **només servidor** | Clau secreta (`sb_secret_…`). Salta les RLS: només per crear usuaris per invitació i esborrar comptes |
 | `NEXT_PUBLIC_SITE_URL` | navegador + servidor | URL pública de l'app (enllaços d'invitació i de recuperació) |
 
 Les variables es validen amb zod a `src/lib/env.ts` i `src/lib/env.server.ts`. Si en falta alguna, l'app falla en arrencar en lloc de fallar més tard.
@@ -45,7 +44,8 @@ src/
   components/ui/       Button, Card, Avatar, Tabs, Input…
   components/layout/   Header, NavLinks, PageShell (3 columnes)
   features/<mòdul>/    actions.ts · queries.ts · schemas.ts · components/
-  lib/supabase/        client (navegador) · server · admin (secret) · proxy
+  lib/supabase/        client (navegador) · server · proxy
+  lib/auth.ts          getCurrentProfile · requireMember · requireAdmin
   proxy.ts             refresc de sessió + protecció de rutes
   types/database.ts    generat amb `npm run db:types`
 supabase/migrations/   SQL versionat
@@ -55,13 +55,13 @@ docs/                  base de dades, permisos, desplegament
 ## Seguretat (resum)
 
 - Les **RLS** són la barrera principal. El proxy i la UI només són comoditat.
-- La clau secreta s'importa només des de fitxers marcats amb `server-only`.
-- El registre públic de Supabase **està desactivat**: els comptes es creen al servidor després de validar una invitació.
+- **No hi ha clau secreta enlloc.** El registre per invitació es valida dins Postgres amb triggers a `auth.users`: és impossible crear un compte sense invitació vàlida.
+- Detalls a [`docs/PERMISOS.md`](docs/PERMISOS.md) i [`docs/BASE-DE-DADES.md`](docs/BASE-DE-DADES.md).
 
 ## Estat
 
 - [x] Fase 1: configuració i sistema de disseny
-- [ ] Fase 2: autenticació i registre per invitació
+- [x] Fase 2: autenticació i registre per invitació
 - [ ] Fase 3: feed, murs, publicacions, comentaris, m'agrada
 - [ ] Fase 4: galeria, wishlist, música, Spotify
 - [ ] Fase 5: administració i revisió de seguretat
