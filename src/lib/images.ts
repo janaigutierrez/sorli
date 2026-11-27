@@ -6,9 +6,17 @@ import type { MediaBucket } from "@/lib/media";
 export const ACCEPTED_IMAGES = "image/jpeg,image/png,image/webp,image/gif";
 const MAX_INPUT_BYTES = 25 * 1024 * 1024;
 
+const EXT: Record<string, string> = { "image/webp": "webp", "image/jpeg": "jpg", "image/png": "png" };
+
+function toBlob(canvas: HTMLCanvasElement, type: string, quality: number) {
+  return new Promise<Blob | null>((res) => canvas.toBlob(res, type, quality));
+}
+
 /**
- * Redueix una imatge al navegador abans de pujar-la (WebP, costat llarg
- * màxim `maxSide`). Els GIF es pugen tal qual per no perdre l'animació.
+ * Redueix una imatge al navegador abans de pujar-la (costat llarg màxim
+ * `maxSide`). Prova WebP i, si el navegador no el sap generar (Safari /
+ * iPhone retornen un PNG enorme sense avisar), fa servir JPEG.
+ * Els GIF es pugen tal qual per no perdre l'animació.
  */
 async function compress(file: File, maxSide: number): Promise<{ blob: Blob; ext: string }> {
   if (file.type === "image/gif") return { blob: file, ext: "gif" };
@@ -21,12 +29,26 @@ async function compress(file: File, maxSide: number): Promise<{ blob: Blob; ext:
   const canvas = document.createElement("canvas");
   canvas.width = w;
   canvas.height = h;
-  canvas.getContext("2d")!.drawImage(bitmap, 0, 0, w, h);
-  bitmap.close();
+  const ctx = canvas.getContext("2d")!;
+  ctx.drawImage(bitmap, 0, 0, w, h);
 
-  const blob = await new Promise<Blob | null>((res) => canvas.toBlob(res, "image/webp", 0.85));
+  let blob = await toBlob(canvas, "image/webp", 0.82);
+
+  if (!blob || blob.type !== "image/webp") {
+    // JPEG no té transparència: fons blanc perquè els PNG amb transparència no surtin negres.
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, w, h);
+    ctx.drawImage(bitmap, 0, 0, w, h);
+    blob = await toBlob(canvas, "image/jpeg", 0.82);
+  }
+  bitmap.close();
   if (!blob) throw new Error("No s'ha pogut processar la imatge.");
-  return { blob, ext: "webp" };
+
+  // Si l'original ja era petit i lleuger (p. ex. un JPEG ja comprimit), ens el quedem.
+  if (scale === 1 && file.size <= blob.size && (file.type === "image/jpeg" || file.type === "image/webp")) {
+    return { blob: file, ext: EXT[file.type] };
+  }
+  return { blob, ext: EXT[blob.type] ?? "jpg" };
 }
 
 /**
